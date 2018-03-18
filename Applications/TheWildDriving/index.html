@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>The Wild Driving: The Game</title>
+		<meta name="description" content="A game developed on a Basic 3D Scene with Three.js" />
+		<meta name="keywords" content="three.js, webgl, game, 3d, animation, car, web development, javascript" />
+		<meta name="author" content="Teumessian" />
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,700italic' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="css/game.css" />
+		<script type="text/javascript" src="js/TweenMax.min.js"></script>
+		<script type="text/javascript" src="js/three.min.js"></script>
+		<script type="text/javascript" src="js/Plane.js"></script>
+		<script type="text/javascript" src="js/Cloud.js"></script>
+		<script type="text/javascript" src="js/Coin.js"></script>
+		<script type="text/javascript" src="js/Ennemy.js"></script>
+		<script type="text/javascript" src="js/Particle.js"></script>
+		<script type="text/javascript" src="js/Sea.js"></script>
+		<script type="text/javascript" src="js/Sky.js"></script>
+		<script type="text/javascript" src="js/game.js" /></script>
+		<!--[if IE]>
+		  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="game-holder" id="gameHolder">
+			<div class="header">
+				<h1><span>the</span>Wild Driving</h1>
+				<h2>enjoy the open world</h2>
+				<div class="score" id="score">
+					<div class="score__content" id="account">
+						<div class="score__label" id="nameValue">user_default</div>
+						<svg class="name-img" id="nameImg" viewbox="0 0 190 190">
+							<image x="0" y="0" width="190" height="190" preserveAspectRatio="none meet" xlink:href="img/user_default.png" id="img"></image>
+						</svg>
+					</div>
+					<div class="score__content" id="level">
+						<div class="score__label">level</div>
+						<div class="score__value score__value--level" id="levelValue">1</div>
+						<svg class="level-circle" id="levelCircle" viewbox="0 0 200 200">
+							<circle id="levelCircleBgr" r="80" cx="100" cy="100" fill="none" stroke="#d1b790" stroke-width="24px" />
+							<circle id="levelCircleStroke" r="80" cx="100" cy="100" fill="none" #f25346 stroke="#68c3c0" stroke-width="14px" stroke-dasharray="502" />
+						</svg>
+					</div>
+					<div class="score__content" id="dist">
+						<div class="score__label">distance</div>
+						<div class="score__value score__value--dist" id="distValue">000</div>
+					</div>
+					<div class="score__content" id="energy">
+						<div class="score__label">energy</div>
+						<div class="score__value score__value--energy" id="energyValue">
+							<div class="energy-bar" id="energyBar"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="world" id="world"></div>
+			<div class="message message--replay" id="replayMessage">Click to Replay</div>
+			<div class="message message--play" id="playMessage">Click to Play</div>
+			<div class="message message--instructions" id="instructions">The direction key controls<span>Use shift key to burst</span></div>
+		</div>
+
+		<nav class="meta">
+			<a class="codrops-icon codrops-icon--prev" href="" title="Setting"><span>Setting</span></a>
+			<a class="codrops-icon codrops-icon--drop" href="http://www.teumessian.top" title="About"><span>About</span></a>
+		</nav>
+
+		<div class="partisan">
+			<svg class="partisan__bg" viewBox="0 0 500 188" preserveAspectRatio="none" width="100%" height="100%" aria-hidden="true">
+				<polygon points="0 154 123.39 0 235.78 14.79 365.6 28.9 436.24 114.93 500 188 0 188 0 154" fill="#bed730"/>
+				<polygon points="0 188 108.84 18.17 347.91 26.79 500 188 365.6 28.9 123.39 0 0 154 0 188" fill="#dde465"/>
+			</svg>
+			<h3 class="partisan__title">Teumessian</h3>
+		</div>
+	</body>
+</html>
