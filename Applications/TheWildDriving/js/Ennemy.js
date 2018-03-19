@@ -1,5 +1,5 @@
 Ennemy = function(){
-    var geom = new THREE.TetrahedronGeometry(16,4);
+    var geom = new THREE.TetrahedronGeometry(20,4);
     var mat = new THREE.MeshPhongMaterial({
         color:Colors.red,
         shininess:0,
@@ -32,11 +32,11 @@ EnnemiesHolder.prototype.spawnEnnemies = function(){
         ennemy.distance = game.seaRadius + game.planeDefaultHeight + (-1 + Math.random() * 2) * (game.planeAmpHeight-20);
         ennemy.mesh.position.y = -game.seaRadius + Math.sin(ennemy.angle)*ennemy.distance;
         ennemy.mesh.position.x = Math.cos(ennemy.angle)*ennemy.distance;
+        ennemy.mesh.position.z = -800 + Math.random()*400;
   
         this.mesh.add(ennemy.mesh);
         this.ennemiesInUse.push(ennemy);
     }
-    this.mesh.position.z = -200 + Math.random()*400;
 }
   
 EnnemiesHolder.prototype.rotateEnnemies = function(){
@@ -52,11 +52,10 @@ EnnemiesHolder.prototype.rotateEnnemies = function(){
         ennemy.mesh.rotation.y += Math.random()*.1;
   
         //var globalEnnemyPosition =  ennemy.mesh.localToWorld(new THREE.Vector3());
-        //需要修改
         var diffPos = airplane.mesh.position.clone().sub(ennemy.mesh.position.clone());
-        var d = diffPos.length();
+        var d = diffPos.length()
         if (d<game.ennemyDistanceTolerance){
-            particlesHolder.spawnParticles(ennemy.mesh.position.clone(), 15, Colors.red, 3);
+            particlesHolder.spawnParticles(ennemy.mesh.position.clone(), 25, Colors.red, 3);
   
             ennemiesPool.unshift(this.ennemiesInUse.splice(i,1)[0]);
             this.mesh.remove(ennemy.mesh);

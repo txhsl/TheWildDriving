@@ -28,6 +28,7 @@ CoinsHolder.prototype.spawnCoins = function(){
     var nCoins = 1 + Math.floor(Math.random()*10);
     var d = game.seaRadius + game.planeDefaultHeight + (-1 + Math.random() * 2) * (game.planeAmpHeight-20);
     var amplitude = 10 + Math.round(Math.random()*10);
+    var targetZ = -200 + Math.random()*400;
     for (var i=0; i<nCoins; i++){
         var coin;
         if (this.coinsPool.length) {
@@ -41,8 +42,8 @@ CoinsHolder.prototype.spawnCoins = function(){
         coin.distance = d + Math.cos(i*.5)*amplitude;
         coin.mesh.position.y = -game.seaRadius + Math.sin(coin.angle)*coin.distance;
         coin.mesh.position.x = Math.cos(coin.angle)*coin.distance;
+        coin.mesh.position.z = targetZ;
     }
-    this.mesh.position.z = -200 + Math.random()*400;
 }
   
 CoinsHolder.prototype.rotateCoins = function(){
@@ -62,7 +63,7 @@ CoinsHolder.prototype.rotateCoins = function(){
         if (d<game.coinDistanceTolerance){
             this.coinsPool.unshift(this.coinsInUse.splice(i,1)[0]);
             this.mesh.remove(coin.mesh);
-            particlesHolder.spawnParticles(coin.mesh.position.clone(), 5, 0x009999, .8);
+            particlesHolder.spawnParticles(coin.mesh.position.clone(), 15, 0x009999, .8);
             addEnergy();
             i--;
         }else if (coin.angle > Math.PI){

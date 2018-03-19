@@ -68,13 +68,13 @@ function resetGame(){
             cameraNearPos:150,
             cameraSensivity:0.002,
   
-            coinDistanceTolerance:15,
+            coinDistanceTolerance:30,
             coinValue:3,
             coinsSpeed:.5,
             coinLastSpawn:0,
             distanceForCoinsSpawn:100,
   
-            ennemyDistanceTolerance:10,
+            ennemyDistanceTolerance:40,
             ennemyValue:10,
             ennemiesSpeed:.6,
             ennemyLastSpawn:0,
@@ -158,6 +158,33 @@ function handleMouseMove(event) {
     var tx = -1 + (event.clientX / WIDTH)*2;
     var ty = 1 - (event.clientY / HEIGHT)*2;
     mousePos = {x:tx, y:ty};
+}
+
+function handleMousewheel(e) {
+  e.preventDefault();
+  var fov = camera.fov;
+  
+  if (e.wheelDelta) { //IE and Chrome
+      if (e.wheelDelta > 0) { //up
+          fov -= (40 < fov ? 3 : 0);
+      }
+      if (e.wheelDelta < 0) { //down
+          fov += (fov < 80 ? 3 : 0);
+      }
+  } else if (e.detail) {  //Firefox
+      if (e.detail > 0) { //up
+          fov -= 3;
+      }
+      if (e.detail < 0) { //down
+          fov += 3;
+      }
+  }
+
+  //camera.fov = fov;
+  camera.fov = normalize(fov,-1,1,40, 80);
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
+  //updateinfo();
 }
   
 function handleTouchMove(event) {
@@ -396,8 +423,8 @@ function updatePlane(){
   airplane.mesh.rotation.z = (targetY-airplane.mesh.position.y)*deltaTime*game.planeRotXSensivity;
   airplane.mesh.rotation.x = -(airplane.mesh.position.z-targetZ)*deltaTime*game.planeRotZSensivity*0.1;
   var targetCameraZ = normalize(game.planeSpeed, game.planeMinSpeed, game.planeMaxSpeed, game.cameraNearPos, game.cameraFarPos);
-  camera.fov = normalize(mousePos.x,-1,1,40, 80);
-  camera.updateProjectionMatrix ()
+  //camera.fov = normalize(mousePos.x,-1,1,40, 80);
+  //camera.updateProjectionMatrix();
   camera.position.y += (airplane.mesh.position.y - camera.position.y)*deltaTime*game.cameraSensivity;
   camera.position.z += (airplane.mesh.position.z - camera.position.z)*deltaTime*game.cameraSensivity;
 
@@ -453,6 +480,7 @@ function init(event){
   document.addEventListener('touchmove', handleTouchMove, false);
   document.addEventListener('mouseup', handleMouseUp, false);
   document.addEventListener('touchend', handleTouchEnd, false);
+  document.addEventListener('mousewheel', handleMousewheel, false);
 
   loop();
 }
