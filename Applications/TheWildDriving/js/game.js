@@ -423,8 +423,9 @@ function updatePlane(){
   airplane.mesh.rotation.z = (targetY-airplane.mesh.position.y)*deltaTime*game.planeRotXSensivity;
   airplane.mesh.rotation.x = -(airplane.mesh.position.z-targetZ)*deltaTime*game.planeRotZSensivity*0.1;
   var targetCameraZ = normalize(game.planeSpeed, game.planeMinSpeed, game.planeMaxSpeed, game.cameraNearPos, game.cameraFarPos);
-  //camera.fov = normalize(mousePos.x,-1,1,40, 80);
-  //camera.updateProjectionMatrix();
+  //camera.fov = normalize(airplane.mesh.position.y - game.planeDefaultHeight,-1,1,40, 80);
+  camera.fov = normalize(-mousePos.y,-1,1,50, 70);
+  camera.updateProjectionMatrix();
   camera.position.y += (airplane.mesh.position.y - camera.position.y)*deltaTime*game.cameraSensivity;
   camera.position.z += (airplane.mesh.position.z - camera.position.z)*deltaTime*game.cameraSensivity;
 
