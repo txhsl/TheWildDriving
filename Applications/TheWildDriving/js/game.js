@@ -80,9 +80,10 @@ function resetGame(){
             ennemyLastSpawn:0,
             distanceForEnnemiesSpawn:150,
   
-            status : "playing",
+            status : "waitingPlay",
     };
     fieldLevel.innerHTML = Math.floor(game.level);
+    //hidePlay();
 }
 
 //THREEJS RELATED VARIABLES
@@ -198,6 +199,11 @@ function handleMouseUp(event){
     if (game.status == "waitingReplay"){
       resetGame();
       hideReplay();
+      game.status = "playing";
+    }else if(game.status == "waitingPlay"){
+      resetGame();
+      hidePlay();
+      game.status = "playing";
     }
 }
   
@@ -206,6 +212,11 @@ function handleTouchEnd(event){
     if (game.status == "waitingReplay"){
       resetGame();
       hideReplay();
+      game.status = "playing";
+    }else if(game.status == "waitingPlay"){
+      resetGame();
+      hidePlay();
+      game.status = "playing";
     }
 }
 
@@ -295,7 +306,7 @@ function loop(){
   deltaTime = newTime-oldTime;
   oldTime = newTime;
 
-  if (game.status=="playing"){
+  if (game.status=="playing" || game.status=="waitingPlay"){
 
     // Add energy coins every 100m;
     if (Math.floor(game.distance)%game.distanceForCoinsSpawn == 0 && Math.floor(game.distance) > game.coinLastSpawn){
@@ -322,7 +333,6 @@ function loop(){
       game.targetBaseSpeed = game.initSpeed + game.incrementSpeedByLevel*game.level
     }
 
-
     updatePlane();
     updateDistance();
     updateEnergy();
@@ -341,10 +351,9 @@ function loop(){
       game.status = "waitingReplay";
 
     }
-  }else if (game.status=="waitingReplay"){
+  }else if(game.status=="waitingReplay"){
 
   }
-
 
   airplane.propeller.rotation.x +=.2 + game.planeSpeed * deltaTime*.005;
   sea.mesh.rotation.z += game.speed*deltaTime;//*game.seaRotationSpeed;
@@ -400,8 +409,6 @@ function removeEnergy(){
   game.energy = Math.max(0, game.energy);
 }
 
-
-
 function updatePlane(){
 
   game.planeSpeed = normalize(mousePos.x,-.5,.5,game.planeMinSpeed, game.planeMaxSpeed);
@@ -445,6 +452,14 @@ function hideReplay(){
   replayMessage.style.display="none";
 }
 
+function showPlay(){
+  playMessage.style.display="block";
+}
+
+function hidePlay(){
+  playMessage.style.display="none";
+}
+
 function normalize(v,vmin,vmax,tmin, tmax){
   var nv = Math.max(Math.min(v,vmax), vmin);
   var dv = vmax-vmin;
@@ -454,7 +469,7 @@ function normalize(v,vmin,vmax,tmin, tmax){
   return tv;
 }
 
-var fieldDistance, energyBar, replayMessage, fieldLevel, levelCircle;
+var fieldDistance, energyBar, replayMessage, playMessage, fieldLevel, levelCircle;
 
 function init(event){
 
@@ -463,8 +478,12 @@ function init(event){
   fieldDistance = document.getElementById("distValue");
   energyBar = document.getElementById("energyBar");
   replayMessage = document.getElementById("replayMessage");
+  playMessage = document.getElementById("playMessage");
   fieldLevel = document.getElementById("levelValue");
   levelCircle = document.getElementById("levelCircleStroke");
+  header = document.getElementById("header");
+  instructions = document.getElementById("instructions");
+  partisan = document.getElementById("partisan");
 
   resetGame();
   createScene();
