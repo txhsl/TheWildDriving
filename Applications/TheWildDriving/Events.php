@@ -6,9 +6,9 @@
  * For full copyright and license information, please see the MIT-LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @author walkor<walkor@workerman.net>
- * @copyright walkor<walkor@workerman.net>
- * @link http://www.workerman.net/
+ * @author teumessian<teumessian@qq.com>
+ * @copyright teumessian<teumessian@qq.com>
+ * @link http://www.teumessian.top/
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
@@ -56,10 +56,12 @@ class Events
                     array(
                         'type'     => 'update',
                         'id'       => $_SESSION['id'],
-                        'angle'    => $message_data["angle"]+0,
-                        'momentum' => $message_data["momentum"]+0,
-                        'x'        => $message_data["x"]+0,
-                        'y'        => $message_data["y"]+0,
+                        'positionX'        => $message_data["positionX"]+0,
+                        'positionY'        => $message_data["positionY"]+0,
+                        'positionZ'        => $message_data["positionZ"]+0,
+                        'rotationX'        => $message_data["rotationX"]+0,
+                        'rotationY'        => $message_data["rotationY"]+0,
+                        'rotationZ'        => $message_data["rotationZ"]+0,
                         'life'     => 1,
                         'name'     => isset($message_data['name']) ? $message_data['name'] : 'Guest.'.$_SESSION['id'],
                         'authorized'  => false,
