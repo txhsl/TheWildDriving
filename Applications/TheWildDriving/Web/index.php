@@ -1,3 +1,28 @@
+<?php 
+/**
+ * This file is part of workerman.
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the MIT-LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @author walkor<walkor@workerman.net>
+ * @copyright walkor<walkor@workerman.net>
+ * @link http://www.workerman.net/
+ * @license http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+if(!function_exists('is_mobile'))
+{
+    function is_mobile()
+    {
+        //php判断客户端是否为手机
+        $agent = $_SERVER['HTTP_USER_AGENT'];
+        return (strpos($agent,"NetFront") || strpos($agent,"iPhone") || strpos($agent,"MIDP-2.0") || strpos($agent,"Opera Mini") || strpos($agent,"UCWEB") || strpos($agent,"Android") || strpos($agent,"Windows CE") || strpos($agent,"SymbianOS"));
+    }
+}
+?>
+<!doctype html>
+
 <html>
 	<head>
 		<meta charset="UTF-8" />
@@ -11,8 +36,12 @@
 		<link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,700italic' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="css/demo.css" />
 		<link rel="stylesheet" type="text/css" href="css/game.css" />
+		<script type="text/javascript" src="js/lib/parseUri.js"></script> 
+		<script type="text/javascript" src="js/lib/modernizr-1.5.min.js"></script>
+		<script type="text/javascript" src="js/lib/Stats.js"></script>
 		<script type="text/javascript" src="js/lib/TweenMax.min.js"></script>
 		<script type="text/javascript" src="js/lib/three.min.js"></script>
+		<script type="text/javascript" src="js/lib/jquery.min.js"></script>
 		<script type="text/javascript" src="js/Plane.js"></script>
 		<script type="text/javascript" src="js/Cloud.js"></script>
 		<script type="text/javascript" src="js/Coin.js"></script>
@@ -21,6 +50,12 @@
 		<script type="text/javascript" src="js/Sea.js"></script>
 		<script type="text/javascript" src="js/Sky.js"></script>
 		<script type="text/javascript" src="js/game.js" /></script>
+		<script type="text/javascript" src="js/Cookie.js" /></script>
+		<script type="text/javascript" src="js/formControls.js" /></script>
+		<script type="text/javascript" src="js/Model.js" /></script>
+		<script type="text/javascript" src="js/Keys.js" /></script>
+		<script type="text/javascript" src="js/Message.js" /></script>
+		<script type="text/javascript" src="js/WebSocketService.js" /></script>
 		<!--[if IE]>
 		  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
