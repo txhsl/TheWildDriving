@@ -53,7 +53,7 @@ EnnemiesHolder.prototype.rotateEnnemies = function(){
   
         //var globalEnnemyPosition =  ennemy.mesh.localToWorld(new THREE.Vector3());
         var diffPos = airplane.mesh.position.clone().sub(ennemy.mesh.position.clone());
-        var d = diffPos.length()
+        var d = diffPos.length();
         if (d<game.ennemyDistanceTolerance){
             particlesHolder.spawnParticles(ennemy.mesh.position.clone(), 25, Colors.red, 3);
   

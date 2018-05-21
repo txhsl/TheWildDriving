@@ -7,8 +7,13 @@ var Colors = {
     pink:0xF5986E,
     yellow:0xf4ce93,
     blue:0x68c3c0,
-
+    green:0x76ff03,
+    purple:0x7c4dff,
+    grey:0x9e9e9e,
 };
+
+//SKINS
+var MainColors = [Colors.red, Colors.yellow, Colors.green, Colors.purple, Colors.grey];
 
 ///////////////
 
@@ -20,6 +25,7 @@ var oldTime = new Date().getTime();
 var ennemiesPool = [];
 var particlesPool = [];
 var particlesInUse = [];
+var model = new Model();
 
 function resetGame(){
     game = {speed:0,
@@ -83,7 +89,6 @@ function resetGame(){
             status : "waitingPlay",
     };
     fieldLevel.innerHTML = Math.floor(game.level);
-    //hidePlay();
 }
 
 //THREEJS RELATED VARIABLES
@@ -135,14 +140,6 @@ function createScene() {
   
     window.addEventListener('resize', handleWindowResize, false);
   
-    /*
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.minPolarAngle = -Math.PI / 2;
-    controls.maxPolarAngle = Math.PI ;
-  
-    //controls.noZoom = true;
-    //controls.noPan = true;
-    //*/
 }
   
 // MOUSE AND SCREEN EVENTS
@@ -255,10 +252,15 @@ function createLights() {
 var sea;
 var airplane;
 
-function createPlane(){
-  airplane = new AirPlane();
+function createUserPlane(){
+  airplane = new AirPlane(0);
   airplane.mesh.scale.set(.25,.25,.25);
   airplane.mesh.position.y = game.planeDefaultHeight;
+
+  // add into model
+  model.userPlane = airplane;
+  model.userPlane.id = -1;
+  model.planes[model.userPlane.id] = model.userPlane;
   scene.add(airplane.mesh);
 }
 
@@ -300,6 +302,47 @@ function createParticles(){
   scene.add(particlesHolder.mesh)
 }
 
+// NETWORK
+var webSocket, webSocketService, messageQuota = 5, settings;
+
+function onSocketOpen(e){
+  console.log('Socket opened!', e);
+  
+  //FIXIT: Proof of concept. refactor!
+  uri = parseUri(document.location)
+  if ( uri.queryKey.oauth_token ) {
+    app.authorize(uri.queryKey.oauth_token, uri.queryKey.oauth_verifier)						
+  }
+  // end of proof of concept code.
+};
+
+function onSocketClose(e) {
+  console.log('Socket closed!', e);
+  webSocketService.connectionClosed();
+};
+
+function onSocketMessage(e) {
+  try {
+    var data = JSON.parse(e.data);
+    webSocketService.processMessage(data);
+  } catch(e) {
+    console.log(e);
+  }
+};
+
+function sendMessage(msg) {
+  
+  if (messageQuota>0) {
+    messageQuota--;
+    webSocketService.sendMessage(msg);
+  }
+  
+}
+
+function authorize(token,verifier) {
+  webSocketService.authorize(token,verifier);
+}
+
 function loop(){
 
   newTime = new Date().getTime();
@@ -336,6 +379,11 @@ function loop(){
     updatePlane();
     updateDistance();
     updateEnergy();
+
+    if(webSocketService.hasConnection) {
+			webSocketService.sendUpdate(model.userPlane);
+		}
+
     game.baseSpeed += (game.targetBaseSpeed - game.baseSpeed) * deltaTime * 0.02;
     game.speed = game.baseSpeed * game.planeSpeed * 0.2;
 
@@ -346,16 +394,26 @@ function loop(){
     game.planeFallSpeed *= 1.05;
     airplane.mesh.position.y -= game.planeFallSpeed*deltaTime;
 
+    if(webSocketService.hasConnection) {
+			webSocketService.sendUpdate(model.userPlane);
+		}
+
     if (airplane.mesh.position.y <-200){
       showReplay();
       game.status = "waitingReplay";
 
     }
   }else if(game.status=="waitingReplay"){
-
+    if(webSocketService.hasConnection) {
+			webSocketService.sendUpdate(model.userPlane);
+		}
   }
 
-  airplane.propeller.rotation.x +=.2 + game.planeSpeed * deltaTime*.005;
+  for (id in model.planes){
+    model.planes[id].propeller.rotation.x +=.2 + game.planeSpeed * deltaTime*.005;
+  }
+  //airplane.propeller.rotation.x +=.2 + game.planeSpeed * deltaTime*.005;
+
   sea.mesh.rotation.z += game.speed*deltaTime;//*game.seaRotationSpeed;
 
   if ( sea.mesh.rotation.z > 2*Math.PI)  sea.mesh.rotation.z -= 2*Math.PI;
@@ -364,6 +422,7 @@ function loop(){
 
   coinsHolder.rotateCoins();
   ennemiesHolder.rotateEnnemies();
+  model.checkUserCollision();
 
   sky.moveClouds();
   sea.moveWaves();
@@ -446,18 +505,23 @@ function updatePlane(){
 
 function showReplay(){
   replayMessage.style.display="block";
+  instructionsMessage.style.display="block";
 }
 
 function hideReplay(){
   replayMessage.style.display="none";
+  instructionsMessage.style.display="none";
 }
 
 function showPlay(){
   playMessage.style.display="block";
+  instructionsMessage.style.display="block";
 }
 
 function hidePlay(){
   playMessage.style.display="none";
+  instructionsMessage.style.display="none";
+  loop();
 }
 
 function normalize(v,vmin,vmax,tmin, tmax){
@@ -469,7 +533,7 @@ function normalize(v,vmin,vmax,tmin, tmax){
   return tv;
 }
 
-var fieldDistance, energyBar, replayMessage, playMessage, fieldLevel, levelCircle;
+var fieldDistance, energyBar, replayMessage, instructionsMessage, playMessage, fieldLevel, levelCircle;
 
 function init(event){
 
@@ -478,6 +542,7 @@ function init(event){
   fieldDistance = document.getElementById("distValue");
   energyBar = document.getElementById("energyBar");
   replayMessage = document.getElementById("replayMessage");
+  instructionsMessage = document.getElementById("instructions");
   playMessage = document.getElementById("playMessage");
   fieldLevel = document.getElementById("levelValue");
   levelCircle = document.getElementById("levelCircleStroke");
@@ -489,20 +554,29 @@ function init(event){
   createScene();
 
   createLights();
-  createPlane();
+  createUserPlane();
   createSea();
   createSky();
   createCoins();
   createEnnemies();
   createParticles();
 
+  //NETWORK
+  model.settings    = new Settings();
+  webSocket 				= new WebSocket( model.settings.socketServer );
+  webSocket.onopen 		= onSocketOpen;
+  webSocket.onclose		= onSocketClose;
+  webSocket.onmessage 	= onSocketMessage;
+  
+  webSocketService		= new WebSocketService(model, webSocket);
+
   document.addEventListener('mousemove', handleMouseMove, false);
   document.addEventListener('touchmove', handleTouchMove, false);
   document.addEventListener('mouseup', handleMouseUp, false);
   document.addEventListener('touchend', handleTouchEnd, false);
-  document.addEventListener('mousewheel', handleMousewheel, false);
+  //document.addEventListener('mousewheel', handleMousewheel, false);
 
-  loop();
+  //loop();
 }
 
 window.addEventListener('load', init, false);

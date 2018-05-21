@@ -6,67 +6,83 @@ var WebSocketService = function(model, webSocket) {
 	
 	this.hasConnection = false;
 	
+	// connect in
 	this.welcomeHandler = function(data) {
 		webSocketService.hasConnection = true;
 		
-		model.userTadpole.id = data.id;
-		model.tadpoles[data.id] = model.tadpoles[-1];
-		delete model.tadpoles[-1];
+		model.userPlane.id = data.id;
+		model.planes[data.id] = model.planes[-1];
+		delete model.planes[-1];
 		
 		$('#chat').initChat();
-		if($.cookie('todpole_name'))	{
-			webSocketService.sendMessage('name:'+$.cookie('todpole_name'));
+		if($.cookie('user_name'))	{
+			webSocketService.sendMessage('name:'+$.cookie('user_name'));
 		}
 	};
 	
+	// update all
 	this.updateHandler = function(data) {
-		var newtp = false;
-		
-		if(!model.tadpoles[data.id]) {
-			newtp = true;
-			model.tadpoles[data.id] = new Tadpole();
-			model.arrows[data.id] = new Arrow(model.tadpoles[data.id], model.camera);
+		var newup = false;
+		// new plane
+		if(!model.planes[data.id]) {
+			newup = true;
+			model.planes[data.id] = new AirPlane(data.id % 5);
+			model.planes[data.id].mesh.scale.set(.25,.25,.25);
+			model.planes[data.id].mesh.position.y = game.planeDefaultHeight;
+			
+			scene.add(model.planes[data.id].mesh);
+			console.log(model);
 		}
 		
-		var tadpole = model.tadpoles[data.id];
+		var plane = model.planes[data.id];
 		
-		if(tadpole.id == model.userTadpole.id) {			
-			tadpole.name = data.name;
+		// update name
+		if(plane.id == model.userPlane.id) {			
+			plane.name = data.name;
 			return;
 		} else {
-			tadpole.name = data.name;
+			plane.name = data.name;
 		}
-		
-		if(newtp) {
-			tadpole.x = data.x;
-			tadpole.y = data.y;
+
+		// update postion
+		if(newup) {
+			plane.mesh.position.x = data.posX;
+			plane.mesh.position.y = data.posY;
+			plane.mesh.position.z = data.posZ;
 		} else {
-			tadpole.targetX = data.x;
-			tadpole.targetY = data.y;
+			//plane.targetX = data.x;
+			//plane.targetY = data.y;
+			plane.mesh.position.x = data.posX;
+			plane.mesh.position.y = data.posY;
+			plane.mesh.position.z = data.posZ;
 		}
 		
-		tadpole.angle = data.angle;
-		tadpole.momentum = data.momentum;
+		plane.mesh.rotation.x = data.rotX;
+		plane.mesh.rotation.y = data.rotY;
+		plane.mesh.rotation.z = data.rotZ;
 		
-		tadpole.timeSinceLastServerUpdate = 0;
+		plane.timeSinceLastServerUpdate = 0;
 	}
 	
+	// cache message
 	this.messageHandler = function(data) {
-		var tadpole = model.tadpoles[data.id];
-		if(!tadpole) {
+		var plane = model.planes[data.id];
+		if(!plane) {
 			return;
 		}
-		tadpole.timeSinceLastServerUpdate = 0;
-		tadpole.messages.push(new Message(data.message));
+		plane.timeSinceLastServerUpdate = 0;
+		plane.messages.push(new Message(data.message));
 	}
 	
+	// connect out 
 	this.closedHandler = function(data) {
-		if(model.tadpoles[data.id]) {
-			delete model.tadpoles[data.id];
-			delete model.arrows[data.id];
+		if(model.planes[data.id]) {
+			scene.remove(model.planes[data.id].mesh);
+			delete model.planes[data.id];
 		}
 	}
 	
+	// redirect server
 	this.redirectHandler = function(data) {
 		if (data.url) {
 			if (authWindow) {
@@ -84,32 +100,37 @@ var WebSocketService = function(model, webSocket) {
 		}
 	}
 	
+	// disconnect message
 	this.connectionClosed = function() {
 		webSocketService.hasConnection = false;
 		$('#cant-connect').fadeIn(300);
 	};
 	
-	this.sendUpdate = function(tadpole) {
+	// send self
+	this.sendUpdate = function(plane) {
 		var sendObj = {
 			type: 'update',
-			x: tadpole.x.toFixed(1),
-			y: tadpole.y.toFixed(1),
-			angle: tadpole.angle.toFixed(3),
-			momentum: tadpole.momentum.toFixed(3)
+			posX: plane.mesh.position.x,
+			posY: plane.mesh.position.y,
+			posZ: plane.mesh.position.z,
+			rotX: plane.mesh.rotation.x,
+			rotY: plane.mesh.rotation.y,
+			rotZ: plane.mesh.rotation.z,
 		};
 		
-		if(tadpole.name) {
-			sendObj['name'] = tadpole.name;
+		if(plane.name) {
+			sendObj['name'] = plane.name;
 		}
 		
 		webSocket.send(JSON.stringify(sendObj));
 	}
 	
+	// send message
 	this.sendMessage = function(msg) {
 		var regexp = /name: ?(.+)/i;
 		if(regexp.test(msg)) {
-			model.userTadpole.name = msg.match(regexp)[1];
-			$.cookie('todpole_name', model.userTadpole.name, {expires:14});
+			model.userPlane.name = msg.match(regexp)[1];
+			$.cookie('user_name', model.userPlane.name, {expires:14});
 			return;
 		}
 		
@@ -121,6 +142,7 @@ var WebSocketService = function(model, webSocket) {
 		webSocket.send(JSON.stringify(sendObj));
 	}
 	
+	// token
 	this.authorize = function(token,verifier) {
 		var sendObj = {
 			type: 'authorize',

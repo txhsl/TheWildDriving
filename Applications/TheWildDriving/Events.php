@@ -56,12 +56,12 @@ class Events
                     array(
                         'type'     => 'update',
                         'id'       => $_SESSION['id'],
-                        'positionX'        => $message_data["positionX"]+0,
-                        'positionY'        => $message_data["positionY"]+0,
-                        'positionZ'        => $message_data["positionZ"]+0,
-                        'rotationX'        => $message_data["rotationX"]+0,
-                        'rotationY'        => $message_data["rotationY"]+0,
-                        'rotationZ'        => $message_data["rotationZ"]+0,
+                        'posX'        => $message_data["posX"]+0,
+                        'posY'        => $message_data["posY"]+0,
+                        'posZ'        => $message_data["posZ"]+0,
+                        'rotX'        => $message_data["rotX"]+0,
+                        'rotY'        => $message_data["rotY"]+0,
+                        'rotZ'        => $message_data["rotZ"]+0,
                         'life'     => 1,
                         'name'     => isset($message_data['name']) ? $message_data['name'] : 'Guest.'.$_SESSION['id'],
                         'authorized'  => false,
@@ -87,6 +87,6 @@ class Events
    public static function onClose($client_id)
    {
        // 广播 xxx 退出了
-       GateWay::sendToAll(json_encode(array('type'=>'closed', 'id'=>$client_id)));
+       GateWay::sendToAll(json_encode(array('type'=>'closed', 'id'=>$_SESSION['id'],'client_id'=>$client_id)));
    }
 }

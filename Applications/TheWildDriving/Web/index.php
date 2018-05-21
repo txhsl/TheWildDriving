@@ -49,13 +49,14 @@ if(!function_exists('is_mobile'))
 		<script type="text/javascript" src="js/Particle.js"></script>
 		<script type="text/javascript" src="js/Sea.js"></script>
 		<script type="text/javascript" src="js/Sky.js"></script>
-		<script type="text/javascript" src="js/game.js" /></script>
+		<script type="text/javascript" src="js/Model.js" /></script>
+		<script type="text/javascript" src="js/Settings.js" /></script>
 		<script type="text/javascript" src="js/Cookie.js" /></script>
 		<script type="text/javascript" src="js/formControls.js" /></script>
-		<script type="text/javascript" src="js/Model.js" /></script>
 		<script type="text/javascript" src="js/Keys.js" /></script>
 		<script type="text/javascript" src="js/Message.js" /></script>
 		<script type="text/javascript" src="js/WebSocketService.js" /></script>
+		<script type="text/javascript" src="js/game.js" /></script>
 		<!--[if IE]>
 		  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -95,9 +96,9 @@ if(!function_exists('is_mobile'))
 			<div class="world" id="world"></div>
 			<div class="message message--replay" id="replayMessage">Click to Replay</div>
 			<div class="message message--play" id="playMessage">Click to Play</div>
-			<div class="message message--instructions" id="instructions">The direction key controls<span>Use shift key to burst</span></div>
+			<div class="message message--instructions" id="instructions">The mouse controls<span>Keyboard to chat</span></div>
 		</div>
-
+		
 		<nav class="meta">
 			<a class="codrops-icon codrops-icon--prev" href="" title="Setting"><span>Setting</span></a>
 			<a class="codrops-icon codrops-icon--drop" href="http://www.teumessian.top" title="About"><span>About</span></a>

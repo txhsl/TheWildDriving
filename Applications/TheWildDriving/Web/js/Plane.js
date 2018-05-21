@@ -1,4 +1,5 @@
 var Pilot = function(){
+
     this.mesh = new THREE.Object3D();
     this.mesh.name = "pilot";
     this.angleHairs=0;
@@ -87,14 +88,14 @@ var Pilot = function(){
     //*/
   }
   
-  var AirPlane = function(){
+  var AirPlane = function(userID){
     this.mesh = new THREE.Object3D();
     this.mesh.name = "airPlane";
   
     // Cabin
   
     var geomCabin = new THREE.BoxGeometry(80,50,50,1,1,1);
-    var matCabin = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
+    var matCabin = new THREE.MeshPhongMaterial({color:MainColors[userID], shading:THREE.FlatShading});
   
     geomCabin.vertices[4].y-=10;
     geomCabin.vertices[4].z+=20;
@@ -123,7 +124,7 @@ var Pilot = function(){
     // Tail Plane
   
     var geomTailPlane = new THREE.BoxGeometry(15,20,5,1,1,1);
-    var matTailPlane = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
+    var matTailPlane = new THREE.MeshPhongMaterial({color:MainColors[userID], shading:THREE.FlatShading});
     var tailPlane = new THREE.Mesh(geomTailPlane, matTailPlane);
     tailPlane.position.set(-40,20,0);
     tailPlane.castShadow = true;
@@ -133,7 +134,7 @@ var Pilot = function(){
     // Wings
   
     var geomSideWing = new THREE.BoxGeometry(30,5,120,1,1,1);
-    var matSideWing = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
+    var matSideWing = new THREE.MeshPhongMaterial({color:MainColors[userID], shading:THREE.FlatShading});
     var sideWing = new THREE.Mesh(geomSideWing, matSideWing);
     sideWing.position.set(0,15,0);
     sideWing.castShadow = true;
@@ -185,7 +186,7 @@ var Pilot = function(){
     this.mesh.add(this.propeller);
   
     var wheelProtecGeom = new THREE.BoxGeometry(30,15,10,1,1,1);
-    var wheelProtecMat = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
+    var wheelProtecMat = new THREE.MeshPhongMaterial({color:MainColors[userID], shading:THREE.FlatShading});
     var wheelProtecR = new THREE.Mesh(wheelProtecGeom,wheelProtecMat);
     wheelProtecR.position.set(25,-20,25);
     this.mesh.add(wheelProtecR);
@@ -217,7 +218,7 @@ var Pilot = function(){
   
     var suspensionGeom = new THREE.BoxGeometry(4,20,4);
     suspensionGeom.applyMatrix(new THREE.Matrix4().makeTranslation(0,10,0))
-    var suspensionMat = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
+    var suspensionMat = new THREE.MeshPhongMaterial({color:MainColors[userID], shading:THREE.FlatShading});
     var suspension = new THREE.Mesh(suspensionGeom,suspensionMat);
     suspension.position.set(-35,-5,0);
     suspension.rotation.z = -.3;

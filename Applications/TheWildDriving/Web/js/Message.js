@@ -1,13 +1,10 @@
 var Message = function(msg) {
 	var message = this;
 	
-	this.age = 1;
-	this.maxAge = 300;
-	
 	this.message = msg;
 	
 	this.update = function() {
-		this.age++;
+		//this.age++;
 	}
 	
 	this.draw = function(context,x,y,i) {
