@@ -32,7 +32,7 @@ EnnemiesHolder.prototype.spawnEnnemies = function(){
         ennemy.distance = game.seaRadius + game.planeDefaultHeight + (-1 + Math.random() * 2) * (game.planeAmpHeight-20);
         ennemy.mesh.position.y = -game.seaRadius + Math.sin(ennemy.angle)*ennemy.distance;
         ennemy.mesh.position.x = Math.cos(ennemy.angle)*ennemy.distance;
-        ennemy.mesh.position.z = -800 + Math.random()*400;
+        ennemy.mesh.position.z = -200 + Math.random()*400;
   
         this.mesh.add(ennemy.mesh);
         this.ennemiesInUse.push(ennemy);

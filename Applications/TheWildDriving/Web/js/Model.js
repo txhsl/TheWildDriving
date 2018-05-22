@@ -25,3 +25,24 @@ Model.prototype.checkUserCollision = function (){
 		}
 	}
 }
+
+Model.prototype.updateScore = function (){
+	var rankedPlanes = this.planes;
+	scoreList.innerHTML = "<tr><th><span>Player</span></th><th><span>Distance</span></th></tr>";
+	for (id in rankedPlanes){
+		var plane = this.planes[id];
+		var tr = document.createElement("tr"); 
+		var tdPlayer = document.createElement("td"); 
+		var tdScore = document.createElement("td"); 
+		var spanPlayer = document.createElement("span"); 
+		var spanScore = document.createElement("span");
+		spanPlayer.innerHTML = plane.name;
+		spanScore.innerHTML = parseInt(plane.distance);
+
+		scoreList.appendChild(tr);
+		tr.appendChild(tdPlayer);
+		tr.appendChild(tdScore);
+		tdPlayer.appendChild(spanPlayer);
+		tdScore.appendChild(spanScore);
+	}
+}

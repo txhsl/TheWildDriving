@@ -36,17 +36,15 @@ a:focus {
 /* Top Navigation Style */
 
 .meta {
-	font-size: 0.75em;
+	font-size: 0.8em;
 	line-height: 1;
 	position: absolute;
 	top: 1em;
 	left: 1em;
-	display: -webkit-flex;
-	display: flex;
 	-webkit-flex-wrap: wrap;
 	flex-wrap: wrap;
 	white-space: nowrap;
-	border-top: 1px solid #d1b790;
+	border: 2px solid #d1b790;
 }
 
 .meta::after {
@@ -56,14 +54,29 @@ a:focus {
 	right: 0;
 	width: 1px;
 	height: 100%;
-	background: #d1b790;
 }
 
 .meta a {
 	display: block;
+	text-align: center;
 	padding: 1em 1.35em;
-	border: 1px solid #d1b790;
-	border-top: 0;
+	border-bottom: 2px solid #d1b790;
+}
+
+.meta span {
+	text-decoration: none;
+	color: #d1b790;
+	outline: none;
+}
+
+.meta td {
+	padding: 1em 1.35em;
+	text-align: center;
+}
+
+.meta table {
+	display: block;
+	padding: 0.5em 1.35em;
 }
 
 .meta a:not(:last-child) {

@@ -65,7 +65,7 @@ if(!function_exists('is_mobile'))
 		<div class="game-holder" id="gameHolder">
 			<div class="header" id="header">
 				<h1><span>the</span>Wild Driving</h1>
-				<h2>enjoy the open world</h2>
+				<h2>enjoy the open sky</h2>
 				<div class="score" id="score">
 					<div class="score__content" id="account">
 						<div class="score__label" id="nameValue">user_default</div>
@@ -92,6 +92,7 @@ if(!function_exists('is_mobile'))
 						</div>
 					</div>
 				</div>
+
 			</div>
 			<div class="world" id="world"></div>
 			<div class="message message--replay" id="replayMessage">Click to Replay</div>
@@ -99,10 +100,16 @@ if(!function_exists('is_mobile'))
 			<div class="message message--instructions" id="instructions">The mouse controls<span>Keyboard to chat</span></div>
 		</div>
 		
-		<nav class="meta">
-			<a class="codrops-icon codrops-icon--prev" href="" title="Setting"><span>Setting</span></a>
-			<a class="codrops-icon codrops-icon--drop" href="http://www.teumessian.top" title="About"><span>About</span></a>
+		<nav class="meta" id="meta" style="display: none;">
+			<a>Score Rank</a>
+			<table class="meta__list" id="scoreList">
+			</table>
 		</nav>
+
+		<div class="chatUI">
+			<input id="chat" type="text"></input>
+			<div id="chatText"></div>
+		</div>
 
 		<div class="partisan" id="partisan">
 			<svg class="partisan__bg" viewBox="0 0 500 188" preserveAspectRatio="none" width="100%" height="100%" aria-hidden="true">

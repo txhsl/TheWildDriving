@@ -91,6 +91,49 @@ var Pilot = function(){
   var AirPlane = function(userID){
     this.mesh = new THREE.Object3D();
     this.mesh.name = "airPlane";
+
+    // message
+    this.name = '';
+    this.age = 0;
+    this.messages = [];
+    this.timeSinceLastActivity = 0;
+
+    this.update = function(mouse) {
+      this.timeSinceLastServerUpdate++;
+      
+      // Update messages
+      
+      for (var i = this.messages.length - 1; i >= 0; i--) {
+        var msg = this.messages[i];
+        msg.update();
+        
+        if(msg.age == msg.maxAge) {
+          this.messages.splice(i,1);
+        }
+      }
+
+    };
+
+    var isAuthorized = function() {
+      return this.name.charAt('0') == "@";
+    };
+    
+    var drawName = function(context) {
+      var opacity = Math.max(Math.min(20 / Math.max(this.timeSinceLastServerUpdate-300,1),1),.2).toFixed(3);
+      context.fillStyle = 'rgba(226,219,226,'+opacity+')';
+      context.font = 7 + "px 'proxima-nova-1','proxima-nova-2', arial, sans-serif";
+      context.textBaseline = 'hanging';
+      var width = context.measureText(this.name).width;
+      context.fillText(this.name, this.x - width/2, this.y + 8);
+    }
+    
+    var drawMessages = function(context) {
+      this.messages.reverse();
+      for(var i = 0, len = this.messages.length; i<len; i++) {
+        this.messages[i].draw(context, this.x+10, this.y+5, i);
+      }
+      this.messages.reverse();
+    };
   
     // Cabin
   

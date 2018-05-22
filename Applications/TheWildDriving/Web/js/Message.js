@@ -4,7 +4,7 @@ var Message = function(msg) {
 	this.message = msg;
 	
 	this.update = function() {
-		//this.age++;
+		// do nothing
 	}
 	
 	this.draw = function(context,x,y,i) {

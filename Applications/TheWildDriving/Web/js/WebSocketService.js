@@ -31,35 +31,27 @@ var WebSocketService = function(model, webSocket) {
 			model.planes[data.id].mesh.position.y = game.planeDefaultHeight;
 			
 			scene.add(model.planes[data.id].mesh);
-			console.log(model);
 		}
 		
 		var plane = model.planes[data.id];
 		
-		// update name
-		if(plane.id == model.userPlane.id) {			
-			plane.name = data.name;
-			return;
-		} else {
-			plane.name = data.name;
-		}
+		// update name			
+		plane.name = data.name;
 
 		// update postion
-		if(newup) {
-			plane.mesh.position.x = data.posX;
-			plane.mesh.position.y = data.posY;
-			plane.mesh.position.z = data.posZ;
-		} else {
-			//plane.targetX = data.x;
-			//plane.targetY = data.y;
-			plane.mesh.position.x = data.posX;
-			plane.mesh.position.y = data.posY;
-			plane.mesh.position.z = data.posZ;
-		}
+		plane.mesh.position.x = data.posX;
+		plane.mesh.position.y = data.posY;
+		plane.mesh.position.z = data.posZ;
+
+		plane.mesh.position.x = data.posX;
+		plane.mesh.position.y = data.posY;
+		plane.mesh.position.z = data.posZ;
 		
 		plane.mesh.rotation.x = data.rotX;
 		plane.mesh.rotation.y = data.rotY;
 		plane.mesh.rotation.z = data.rotZ;
+
+		plane.distance = data.distance;
 		
 		plane.timeSinceLastServerUpdate = 0;
 	}
@@ -116,6 +108,7 @@ var WebSocketService = function(model, webSocket) {
 			rotX: plane.mesh.rotation.x,
 			rotY: plane.mesh.rotation.y,
 			rotZ: plane.mesh.rotation.z,
+			distance: game.distance,
 		};
 		
 		if(plane.name) {

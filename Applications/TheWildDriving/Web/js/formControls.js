@@ -19,7 +19,7 @@
 
 		var updateDimensions = function(){
 			chatText.text(input.val());
-			var width = chatText.width() + 30;
+			var width = chatText.width() + 100;
 			input.css({
 				width: width,
 				marginLeft: (width/2)*-1
@@ -86,7 +86,7 @@
 					if(k != keys.esc && input.val().length > 0) {
 					    	messageHistory.push(input.val());
 			    			messagePointer = messageHistory.length;
-						app.sendMessage(input.val());
+						sendMessage(input.val());
 					}
 					closechat();
 				}

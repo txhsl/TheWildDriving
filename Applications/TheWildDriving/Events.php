@@ -62,6 +62,7 @@ class Events
                         'rotX'        => $message_data["rotX"]+0,
                         'rotY'        => $message_data["rotY"]+0,
                         'rotZ'        => $message_data["rotZ"]+0,
+                        'distance'      => $message_data["distance"]+0,
                         'life'     => 1,
                         'name'     => isset($message_data['name']) ? $message_data['name'] : 'Guest.'.$_SESSION['id'],
                         'authorized'  => false,

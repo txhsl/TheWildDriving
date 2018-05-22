@@ -93,7 +93,7 @@ function resetGame(){
 
 //THREEJS RELATED VARIABLES
 
-var scene,
+var scene, context, 
 camera, fieldOfView, aspectRatio, nearPlane, farPlane,
 renderer,
 container,
@@ -137,6 +137,7 @@ function createScene() {
   
     container = document.getElementById('world');
     container.appendChild(renderer.domElement);
+    context = renderer.getContext('2d');
   
     window.addEventListener('resize', handleWindowResize, false);
   
@@ -379,6 +380,7 @@ function loop(){
     updatePlane();
     updateDistance();
     updateEnergy();
+    updateScoreList();
 
     if(webSocketService.hasConnection) {
 			webSocketService.sendUpdate(model.userPlane);
@@ -473,7 +475,7 @@ function updatePlane(){
   game.planeSpeed = normalize(mousePos.x,-.5,.5,game.planeMinSpeed, game.planeMaxSpeed);
   //var targetY = normalize(mousePos.y,-.75,.75,game.planeDefaultHeight-game.planeAmpHeight, game.planeDefaultHeight+game.planeAmpHeight);
   //var targetX = normalize(mousePos.x,-1,1,-game.planeAmpWidth*.7, -game.planeAmpWidth);
-  var targetY = normalize(mousePos.y,-.75,.75,25, 175);
+  var targetY = normalize(mousePos.y,-.75,.75,25, 225);
   var targetZ = normalize(mousePos.x,-.75,.75,-500, 500);
 
   game.planeCollisionDisplacementX += game.planeCollisionSpeedX;
@@ -521,7 +523,13 @@ function showPlay(){
 function hidePlay(){
   playMessage.style.display="none";
   instructionsMessage.style.display="none";
+
+  meta.style.display="block";
   loop();
+}
+
+function updateScoreList(){
+  model.updateScore();
 }
 
 function normalize(v,vmin,vmax,tmin, tmax){
@@ -533,7 +541,34 @@ function normalize(v,vmin,vmax,tmin, tmax){
   return tv;
 }
 
-var fieldDistance, energyBar, replayMessage, instructionsMessage, playMessage, fieldLevel, levelCircle;
+function compare(property){
+  return function(a,b){
+      var value1 = a[property];
+      var value2 = b[property];
+      return value1 - value2;
+  }
+}
+
+function sortBy(attr,rev){
+  if(rev ==  undefined){
+      rev = 1;
+  }else{
+      rev = (rev) ? 1 : -1;
+  }
+  return function(a,b){
+      a = a[attr];
+      b = b[attr];
+      if(a < b){
+          return rev * -1;
+      }
+      if(a > b){
+          return rev * 1;
+      }
+      return 0;
+  }
+}
+
+var fieldDistance, energyBar, replayMessage, instructionsMessage, playMessage, fieldLevel, levelCircle, meta, scoreList;
 
 function init(event){
 
@@ -549,6 +584,8 @@ function init(event){
   header = document.getElementById("header");
   instructions = document.getElementById("instructions");
   partisan = document.getElementById("partisan");
+  meta = document.getElementById("meta");
+  scoreList = document.getElementById("scoreList");
 
   resetGame();
   createScene();
