@@ -9,7 +9,7 @@ var Colors = {
     blue:0x68c3c0,
     green:0x76ff03,
     purple:0x7c4dff,
-    grey:0x9e9e9e,
+    grey:0x212121,
 };
 
 //SKINS
@@ -220,6 +220,11 @@ function handleTouchEnd(event){
     }
 }
 
+// CHAT
+
+var messages = [];
+
+
 // LIGHTS
 
 var ambientLight, hemisphereLight, shadowLight;
@@ -334,7 +339,7 @@ function makeTextSprite( message, parameters )
 }
 
 // NETWORK
-var webSocket, webSocketService, messageQuota = 5, settings;
+var webSocket, webSocketService, messageQuota = 25, settings;
 
 function onSocketOpen(e){
   console.log('Socket opened!', e);
@@ -411,6 +416,7 @@ function loop(){
     updateDistance();
     updateEnergy();
     updateScoreList();
+    updateMessages();
 
     if(webSocketService.hasConnection) {
 			webSocketService.sendUpdate(model.userPlane);
@@ -567,6 +573,20 @@ function updateScoreList(){
   model.updateScore();
 }
 
+function updateMessages(){
+  // Update messages
+  messageBox.innerHTML = '';
+  for (var i = messages.length - 1; i >= 0; i--) {
+    var msg = messages[i];
+    msg.update();
+
+    msg.draw();
+    if(msg.age == msg.maxAge) {
+      messages.splice(i,1);
+    }
+  }
+}
+
 function normalize(v,vmin,vmax,tmin, tmax){
   var nv = Math.max(Math.min(v,vmax), vmin);
   var dv = vmax-vmin;
@@ -603,7 +623,7 @@ function sortBy(attr,rev){
   }
 }
 
-var fieldDistance, energyBar, replayMessage, instructionsMessage, playMessage, fieldLevel, levelCircle, meta, scoreList;
+var fieldDistance, energyBar, replayMessage, instructionsMessage, playMessage, fieldLevel, levelCircle, meta, scoreList, messageBox;
 
 function init(event){
 
@@ -621,6 +641,7 @@ function init(event){
   partisan = document.getElementById("partisan");
   meta = document.getElementById("meta");
   scoreList = document.getElementById("scoreList");
+  messageBox = document.getElementById("messageBox");
 
   resetGame();
   createScene();

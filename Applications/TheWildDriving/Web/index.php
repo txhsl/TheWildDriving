@@ -109,6 +109,7 @@ if(!function_exists('is_mobile'))
 		<div class="chatUI">
 			<input id="chat" type="text"></input>
 			<div id="chatText"></div>
+			<ul id="messageBox" class="message__box"></ul>
 		</div>
 
 		<div class="partisan" id="partisan">

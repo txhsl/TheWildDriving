@@ -95,56 +95,15 @@ var Pilot = function(){
     // message
     this.name = '';
     this.lastName = '';
-    this.nameMesh;
-    this.age = 0;
     this.messages = [];
     this.timeSinceLastActivity = 0;
 
     this.update = function() {
       this.timeSinceLastServerUpdate++;
-      
-      // Update messages
-
-      for (var i = this.messages.length - 1; i >= 0; i--) {
-        var msg = this.messages[i];
-        msg.update();
-        
-        if(msg.age == msg.maxAge) {
-          this.messages.splice(i,1);
-        }
-      }
-
-      // Update Name
-      //this.drawName(context);
-      //this.drawMessages(context);
     };
 
     var isAuthorized = function() {
       return this.name.charAt('0') == "@";
-    };
-    
-    this.drawName = function(context) {
-      if(this.lastName != this.name){
-        if(!this.nameMesh){
-        }
-        else{
-          this.mesh.remove(this.nameMesh);
-          this.nameMesh = null;
-        }
-        var spritey = makeTextSprite( this.name, { fontsize: 100} );
-        spritey.position.set(0,-100,0);
-        this.mesh.add(spritey);
-
-        lastName = name;
-      }
-    }
-    
-    this.drawMessages = function(context) {
-      //this.messages.reverse();
-      //for(var i = 0, len = this.messages.length; i<len; i++) {
-      //  this.messages[i].draw(context, this.x+10, this.y+5, i);
-      //}
-      //this.messages.reverse();
     };
   
     // Cabin

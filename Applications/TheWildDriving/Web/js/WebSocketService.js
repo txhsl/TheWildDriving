@@ -60,13 +60,12 @@ var WebSocketService = function(model, webSocket) {
 	
 	// cache message
 	this.messageHandler = function(data) {
-		console.log(data);
 		var plane = model.planes[data.id];
 		if(!plane) {
 			return;
 		}
 		plane.timeSinceLastServerUpdate = 0;
-		plane.messages.push(new Message(data.message));
+		messages.push(new Message('@' + plane.name +' says: ' + data.message, data.id));
 	}
 	
 	// connect out 

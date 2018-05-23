@@ -210,7 +210,7 @@ input {
 	top: 60%;
 	left: 50%;
 	padding: 10px 20px;
-	background: rgba(255,255,255,.1);
+	background: rgba(0,0,0,.1);
 	border-radius: 20px;
 	color: #fff;
 	text-align: center;
@@ -218,6 +218,30 @@ input {
 	outline-style:none;
 	height:30px;
 	opacity:0;
+	transition: opacity .2s linear;
+	-o-transition: opacity .2s linear;
+	-moz-transition: opacity .2s linear;
+	-webkit-transition: opacity .2s linear;
+	-ms-transition: opacity .2s linear;
+}
+
+.message__box {
+	display: block;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 30%;
+	height: 40%;
+}
+
+.message__box > li {
+	padding: 10px 10px;
+	background: rgba(0,0,0,.1);
+	border-radius: 20px;
+	text-align: right;
+	border-style:none;
+	outline-style:none;
+	height: 30px;
 	transition: opacity .2s linear;
 	-o-transition: opacity .2s linear;
 	-moz-transition: opacity .2s linear;

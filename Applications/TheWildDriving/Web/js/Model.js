@@ -5,7 +5,7 @@ Model = function() {
 }
 
 Model.prototype.checkUserCollision = function (){
-	for (id in this.planes){
+	for (var id in this.planes){
 		if (id != this.userPlane.id){
 			var diffPos = this.userPlane.mesh.position.clone().sub(this.planes[id].mesh.position.clone());
 			var d = diffPos.length();
@@ -27,10 +27,12 @@ Model.prototype.checkUserCollision = function (){
 }
 
 Model.prototype.updateScore = function (){
-	var rankedPlanes = this.planes;
+	var rankedId = Object.keys(model.planes).sort(function(a, b) {
+		return model.planes[b].distance - model.planes[a].distance;
+	});
 	scoreList.innerHTML = "<tr><th><span>Player</span></th><th><span>Distance</span></th></tr>";
-	for (id in rankedPlanes){
-		var plane = this.planes[id];
+	for (var pos in rankedId){
+		var plane = model.planes[rankedId[pos]];
 		var tr = document.createElement("tr"); 
 		var tdPlayer = document.createElement("td"); 
 		var tdScore = document.createElement("td"); 
