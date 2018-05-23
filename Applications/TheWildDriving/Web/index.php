@@ -94,7 +94,7 @@ if(!function_exists('is_mobile'))
 				</div>
 
 			</div>
-			<div class="world" id="world"></div>
+			<div class="world" id="world" ></div>
 			<div class="message message--replay" id="replayMessage">Click to Replay</div>
 			<div class="message message--play" id="playMessage">Click to Play</div>
 			<div class="message message--instructions" id="instructions">The mouse controls<span>Keyboard to chat</span></div>

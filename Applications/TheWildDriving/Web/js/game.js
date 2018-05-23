@@ -85,6 +85,8 @@ function resetGame(){
             ennemiesSpeed:.6,
             ennemyLastSpawn:0,
             distanceForEnnemiesSpawn:150,
+
+            usrDistanceTolerance:20,
   
             status : "waitingPlay",
     };
@@ -93,7 +95,7 @@ function resetGame(){
 
 //THREEJS RELATED VARIABLES
 
-var scene, context, 
+var scene, context, canvas, 
 camera, fieldOfView, aspectRatio, nearPlane, farPlane,
 renderer,
 container,
@@ -134,10 +136,10 @@ function createScene() {
     renderer.setSize(WIDTH, HEIGHT);
   
     renderer.shadowMap.enabled = true;
-  
     container = document.getElementById('world');
     container.appendChild(renderer.domElement);
-    context = renderer.getContext('2d');
+    canvas = document.createElement('canvas');
+    context = canvas.getContext("2d");
   
     window.addEventListener('resize', handleWindowResize, false);
   
@@ -303,6 +305,34 @@ function createParticles(){
   scene.add(particlesHolder.mesh)
 }
 
+function makeTextSprite( message, parameters )
+{
+    if ( parameters === undefined ) parameters = {};
+    var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
+    var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 18;
+    var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 1;
+    var textColor = parameters.hasOwnProperty("textColor") ?parameters["textColor"] : { r:226, g:219, b:226, a:1.0 };
+
+    context.font = "Bold " + fontsize + "px " + fontface;
+    var metrics = context.measureText( message );
+    var textWidth = metrics.width;
+
+    context.lineWidth = 0.5;
+
+    var opacity = Math.max(Math.min(20 / Math.max(this.timeSinceLastServerUpdate-300,1),1),.2).toFixed(3);
+    context.fillStyle = "rgba("+textColor.r+", "+textColor.g+", "+textColor.b+", "+opacity+")";
+    context.fillText( message, borderThickness, fontsize + borderThickness);
+
+    var texture = new THREE.Texture(canvas);
+    texture.needsUpdate = false;
+    texture.minFilter = THREE.LinearFilter;
+
+    var spriteMaterial = new THREE.SpriteMaterial( { map: texture } );
+    var sprite = new THREE.Sprite( spriteMaterial );
+    sprite.scale.set(2.0 * fontsize, 1.0 * fontsize, 3.0 * fontsize);
+    return sprite;
+}
+
 // NETWORK
 var webSocket, webSocketService, messageQuota = 5, settings;
 
@@ -413,6 +443,7 @@ function loop(){
 
   for (id in model.planes){
     model.planes[id].propeller.rotation.x +=.2 + game.planeSpeed * deltaTime*.005;
+    model.planes[id].update();
   }
   //airplane.propeller.rotation.x +=.2 + game.planeSpeed * deltaTime*.005;
 

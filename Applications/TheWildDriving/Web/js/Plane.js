@@ -94,15 +94,17 @@ var Pilot = function(){
 
     // message
     this.name = '';
+    this.lastName = '';
+    this.nameMesh;
     this.age = 0;
     this.messages = [];
     this.timeSinceLastActivity = 0;
 
-    this.update = function(mouse) {
+    this.update = function() {
       this.timeSinceLastServerUpdate++;
       
       // Update messages
-      
+
       for (var i = this.messages.length - 1; i >= 0; i--) {
         var msg = this.messages[i];
         msg.update();
@@ -112,27 +114,37 @@ var Pilot = function(){
         }
       }
 
+      // Update Name
+      //this.drawName(context);
+      //this.drawMessages(context);
     };
 
     var isAuthorized = function() {
       return this.name.charAt('0') == "@";
     };
     
-    var drawName = function(context) {
-      var opacity = Math.max(Math.min(20 / Math.max(this.timeSinceLastServerUpdate-300,1),1),.2).toFixed(3);
-      context.fillStyle = 'rgba(226,219,226,'+opacity+')';
-      context.font = 7 + "px 'proxima-nova-1','proxima-nova-2', arial, sans-serif";
-      context.textBaseline = 'hanging';
-      var width = context.measureText(this.name).width;
-      context.fillText(this.name, this.x - width/2, this.y + 8);
+    this.drawName = function(context) {
+      if(this.lastName != this.name){
+        if(!this.nameMesh){
+        }
+        else{
+          this.mesh.remove(this.nameMesh);
+          this.nameMesh = null;
+        }
+        var spritey = makeTextSprite( this.name, { fontsize: 100} );
+        spritey.position.set(0,-100,0);
+        this.mesh.add(spritey);
+
+        lastName = name;
+      }
     }
     
-    var drawMessages = function(context) {
-      this.messages.reverse();
-      for(var i = 0, len = this.messages.length; i<len; i++) {
-        this.messages[i].draw(context, this.x+10, this.y+5, i);
-      }
-      this.messages.reverse();
+    this.drawMessages = function(context) {
+      //this.messages.reverse();
+      //for(var i = 0, len = this.messages.length; i<len; i++) {
+      //  this.messages[i].draw(context, this.x+10, this.y+5, i);
+      //}
+      //this.messages.reverse();
     };
   
     // Cabin

@@ -9,15 +9,15 @@ Model.prototype.checkUserCollision = function (){
 		if (id != this.userPlane.id){
 			var diffPos = this.userPlane.mesh.position.clone().sub(this.planes[id].mesh.position.clone());
 			var d = diffPos.length();
-        	if (d < game.ennemyDistanceTolerance){
+        	if (d < game.usrDistanceTolerance){
 
 				if (!this.userPlane.protected){
 					game.planeCollisionSpeedX = 100 * diffPos.x / d;
 					game.planeCollisionSpeedY = 100 * diffPos.y / d;
 					ambientLight.intensity = 2;
 
-					this.userPlane.mesh.position.z += game.ennemyDistanceTolerance * diffPos.z / d;
-					this.userPlane.mesh.position.y += game.ennemyDistanceTolerance * diffPos.y / d;
+					this.userPlane.mesh.position.z += 0.5 * game.ennemyDistanceTolerance * diffPos.z / d;
+					this.userPlane.mesh.position.y += 0.5 * game.ennemyDistanceTolerance * diffPos.y / d;
 					removeEnergy();
 				}
 

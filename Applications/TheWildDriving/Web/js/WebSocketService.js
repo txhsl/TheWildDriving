@@ -39,25 +39,28 @@ var WebSocketService = function(model, webSocket) {
 		plane.name = data.name;
 
 		// update postion
-		plane.mesh.position.x = data.posX;
-		plane.mesh.position.y = data.posY;
-		plane.mesh.position.z = data.posZ;
+		if(plane != model.userPlane){
+			plane.mesh.position.x = data.posX;
+			plane.mesh.position.y = data.posY;
+			plane.mesh.position.z = data.posZ;
 
-		plane.mesh.position.x = data.posX;
-		plane.mesh.position.y = data.posY;
-		plane.mesh.position.z = data.posZ;
+			plane.mesh.position.x = data.posX;
+			plane.mesh.position.y = data.posY;
+			plane.mesh.position.z = data.posZ;
 		
-		plane.mesh.rotation.x = data.rotX;
-		plane.mesh.rotation.y = data.rotY;
-		plane.mesh.rotation.z = data.rotZ;
-
+			plane.mesh.rotation.x = data.rotX;
+			plane.mesh.rotation.y = data.rotY;
+			plane.mesh.rotation.z = data.rotZ;
+		}
+		
 		plane.distance = data.distance;
-		
+			
 		plane.timeSinceLastServerUpdate = 0;
 	}
 	
 	// cache message
 	this.messageHandler = function(data) {
+		console.log(data);
 		var plane = model.planes[data.id];
 		if(!plane) {
 			return;
