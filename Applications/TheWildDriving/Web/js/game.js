@@ -556,6 +556,10 @@ function hidePlay(){
   instructionsMessage.style.display="none";
 
   meta.style.display="block";
+
+  document.addEventListener('mousemove', handleMouseMove, false);
+  document.addEventListener('touchmove', handleTouchMove, false);
+
   loop();
 }
 
@@ -638,12 +642,9 @@ function init(event){
   
   webSocketService		= new WebSocketService(model, webSocket);
 
-  document.addEventListener('mousemove', handleMouseMove, false);
-  document.addEventListener('touchmove', handleTouchMove, false);
   document.addEventListener('mouseup', handleMouseUp, false);
   document.addEventListener('touchend', handleTouchEnd, false);
   //document.addEventListener('mousewheel', handleMousewheel, false);
-
   //loop();
 }
 
