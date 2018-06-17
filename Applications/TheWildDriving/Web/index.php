@@ -101,7 +101,7 @@ if(!function_exists('is_mobile'))
 		</div>
 		
 		<nav class="meta" id="meta" style="display: none;">
-			<a>Score Rank</a>
+			<a><strong>Score Rank</strong></a>
 			<table class="meta__list" id="scoreList">
 			</table>
 		</nav>

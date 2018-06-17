@@ -97,6 +97,9 @@ var Pilot = function(){
     this.lastName = '';
     this.messages = [];
     this.timeSinceLastActivity = 0;
+    this.targetY = 0;
+    this.targetZ = 0;
+    this.status = "playing";
 
     this.update = function() {
       this.timeSinceLastServerUpdate++;

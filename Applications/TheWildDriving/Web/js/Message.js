@@ -14,7 +14,7 @@ var Message = function(msg, id) {
 	this.draw = function(color) {
 		var messageItem = document.createElement('li');
 		messageItem.innerText = this.message;
-		messageItem.style.color = '#' + MainColors[this.id % 5].toString(16);
+		messageItem.style.color = (this.id == model.userPlane.id) ? ('#' + MainColors[0].toString(16)) : ('#' + MainColors[this.id % 4 + 1].toString(16));
 		messageBox.appendChild(messageItem);
 	}
 }

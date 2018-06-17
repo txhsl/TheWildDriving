@@ -29,14 +29,16 @@ var model = new Model();
 
 function resetGame(){
     game = {speed:0,
-            initSpeed:.00035,
-            baseSpeed:.00035,
-            targetBaseSpeed:.00035,
+            initSpeed:.00045,
+            baseSpeed:.00045,
+            targetBaseSpeed:.00045,
             incrementSpeedByTime:.0000025,
             incrementSpeedByLevel:.000005,
             distanceForSpeedUpdate:100,
             speedLastUpdate:0,
   
+            targetY:0,
+            targetZ:0,
             distance:0,
             ratioSpeedDistance:50,
             energy:100,
@@ -80,7 +82,8 @@ function resetGame(){
             coinLastSpawn:0,
             distanceForCoinsSpawn:100,
   
-            ennemyDistanceTolerance:40,
+            ennemyInnerDistanceTolerance: 40,
+            ennemyOutterDistanceTolerance: 60,
             ennemyValue:10,
             ennemiesSpeed:.6,
             ennemyLastSpawn:0,
@@ -418,10 +421,6 @@ function loop(){
     updateScoreList();
     updateMessages();
 
-    if(webSocketService.hasConnection) {
-			webSocketService.sendUpdate(model.userPlane);
-		}
-
     game.baseSpeed += (game.targetBaseSpeed - game.baseSpeed) * deltaTime * 0.02;
     game.speed = game.baseSpeed * game.planeSpeed * 0.2;
 
@@ -432,19 +431,36 @@ function loop(){
     game.planeFallSpeed *= 1.05;
     airplane.mesh.position.y -= game.planeFallSpeed*deltaTime;
 
-    if(webSocketService.hasConnection) {
-			webSocketService.sendUpdate(model.userPlane);
-		}
-
     if (airplane.mesh.position.y <-200){
       showReplay();
       game.status = "waitingReplay";
 
     }
   }else if(game.status=="waitingReplay"){
-    if(webSocketService.hasConnection) {
-			webSocketService.sendUpdate(model.userPlane);
-		}
+  }
+
+  for (var id in model.planes){
+		if (id != model.userPlane.id){
+
+      var otherPlane = model.planes[id];
+
+      if (otherPlane.status == "playing"){
+        otherPlane.mesh.position.y += (otherPlane.targetY-otherPlane.mesh.position.y)*deltaTime*game.planeMoveSensivity;
+        otherPlane.mesh.position.z += (otherPlane.targetZ-otherPlane.mesh.position.z)*deltaTime*game.planeMoveSensivity*0.1;
+    
+        otherPlane.mesh.rotation.z = (otherPlane.targetY-otherPlane.mesh.position.y)*deltaTime*game.planeRotXSensivity;
+        otherPlane.mesh.rotation.x = -(otherPlane.mesh.position.z-otherPlane.targetZ)*deltaTime*game.planeRotZSensivity*0.1;
+      }
+      else if (otherPlane.status == "gameover"){
+        otherPlane.mesh.rotation.z += (-Math.PI/2 - airplane.mesh.rotation.z)*.0002*deltaTime;
+        otherPlane.mesh.rotation.x += 0.0003*deltaTime;
+        otherPlane.mesh.position.y -= otherPlane.planeFallSpeed*deltaTime;
+      }
+    }
+  }
+
+  if(webSocketService.hasConnection) {
+    webSocketService.sendUpdate(model.userPlane, targetY, targetZ);
   }
 
   for (id in model.planes){
@@ -510,14 +526,11 @@ function removeEnergy(){
 function updatePlane(){
 
   game.planeSpeed = normalize(mousePos.x,-.5,.5,game.planeMinSpeed, game.planeMaxSpeed);
-  //var targetY = normalize(mousePos.y,-.75,.75,game.planeDefaultHeight-game.planeAmpHeight, game.planeDefaultHeight+game.planeAmpHeight);
-  //var targetX = normalize(mousePos.x,-1,1,-game.planeAmpWidth*.7, -game.planeAmpWidth);
-  var targetY = normalize(mousePos.y,-.75,.75,25, 225);
-  var targetZ = normalize(mousePos.x,-.75,.75,-500, 500);
+  targetY = normalize(mousePos.y,-.75,.75,25, 225);
+  targetZ = normalize(mousePos.x,-.75,.75,-500, 500);
 
   game.planeCollisionDisplacementX += game.planeCollisionSpeedX;
   targetZ += game.planeCollisionDisplacementX;
-
 
   game.planeCollisionDisplacementY += game.planeCollisionSpeedY;
   targetY += game.planeCollisionDisplacementY;
@@ -527,6 +540,12 @@ function updatePlane(){
 
   airplane.mesh.rotation.z = (targetY-airplane.mesh.position.y)*deltaTime*game.planeRotXSensivity;
   airplane.mesh.rotation.x = -(airplane.mesh.position.z-targetZ)*deltaTime*game.planeRotZSensivity*0.1;
+
+  game.planeCollisionSpeedX += (0-game.planeCollisionSpeedX)*deltaTime * 0.03;
+  game.planeCollisionDisplacementX += (0-game.planeCollisionDisplacementX)*deltaTime *0.01;
+  game.planeCollisionSpeedY += (0-game.planeCollisionSpeedY)*deltaTime * 0.03;
+  game.planeCollisionDisplacementY += (0-game.planeCollisionDisplacementY)*deltaTime *0.01;
+
   var targetCameraZ = normalize(game.planeSpeed, game.planeMinSpeed, game.planeMaxSpeed, game.cameraNearPos, game.cameraFarPos);
   //camera.fov = normalize(airplane.mesh.position.y - game.planeDefaultHeight,-1,1,40, 80);
   camera.fov = normalize(-mousePos.y,-1,1,50, 70);
@@ -534,12 +553,7 @@ function updatePlane(){
   camera.position.y += (airplane.mesh.position.y - camera.position.y)*deltaTime*game.cameraSensivity;
   camera.position.z += (airplane.mesh.position.z - camera.position.z)*deltaTime*game.cameraSensivity;
 
-  game.planeCollisionSpeedX += (0-game.planeCollisionSpeedX)*deltaTime * 0.03;
-  game.planeCollisionDisplacementX += (0-game.planeCollisionDisplacementX)*deltaTime *0.01;
-  game.planeCollisionSpeedY += (0-game.planeCollisionSpeedY)*deltaTime * 0.03;
-  game.planeCollisionDisplacementY += (0-game.planeCollisionDisplacementY)*deltaTime *0.01;
-
-  airplane.pilot.updateHairs();
+  //airplane.pilot.updateHairs();
 }
 
 function showReplay(){
@@ -642,6 +656,7 @@ function init(event){
   meta = document.getElementById("meta");
   scoreList = document.getElementById("scoreList");
   messageBox = document.getElementById("messageBox");
+  nameValue = document.getElementById("nameValue");
 
   resetGame();
   createScene();

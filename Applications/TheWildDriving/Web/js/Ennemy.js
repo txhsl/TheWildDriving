@@ -1,5 +1,5 @@
 Ennemy = function(){
-    var geom = new THREE.TetrahedronGeometry(20,4);
+    var geom = new THREE.RingGeometry(40,60,50,1);
     var mat = new THREE.MeshPhongMaterial({
         color:Colors.red,
         shininess:0,
@@ -32,7 +32,8 @@ EnnemiesHolder.prototype.spawnEnnemies = function(){
         ennemy.distance = game.seaRadius + game.planeDefaultHeight + (-1 + Math.random() * 2) * (game.planeAmpHeight-20);
         ennemy.mesh.position.y = -game.seaRadius + Math.sin(ennemy.angle)*ennemy.distance;
         ennemy.mesh.position.x = Math.cos(ennemy.angle)*ennemy.distance;
-        ennemy.mesh.position.z = -200 + Math.random()*400;
+        ennemy.mesh.position.z = -300 + Math.random()*600;
+        ennemy.mesh.rotation.y = 1.5*Math.PI;
   
         this.mesh.add(ennemy.mesh);
         this.ennemiesInUse.push(ennemy);
@@ -42,19 +43,48 @@ EnnemiesHolder.prototype.spawnEnnemies = function(){
 EnnemiesHolder.prototype.rotateEnnemies = function(){
     for (var i=0; i<this.ennemiesInUse.length; i++){
         var ennemy = this.ennemiesInUse[i];
+        if (this.ennemiesInUse.length == 0){
+            break;
+        }
         ennemy.angle += game.speed*deltaTime*game.ennemiesSpeed;
   
-        if (ennemy.angle > Math.PI*2) ennemy.angle -= Math.PI*2;
+        if (ennemy.angle > Math.PI) ennemy.angle -= Math.PI;
   
         ennemy.mesh.position.y = -game.seaRadius + Math.sin(ennemy.angle)*ennemy.distance;
         ennemy.mesh.position.x = Math.cos(ennemy.angle)*ennemy.distance;
-        ennemy.mesh.rotation.z += Math.random()*.1;
-        ennemy.mesh.rotation.y += Math.random()*.1;
+        //ennemy.mesh.rotation.z += Math.random()*.1;
+        //ennemy.mesh.rotation.y += Math.random()*.1;
   
         //var globalEnnemyPosition =  ennemy.mesh.localToWorld(new THREE.Vector3());
+
+        if (ennemy.angle > Math.PI*0.5){
+            ennemiesPool.unshift(this.ennemiesInUse.splice(i,1)[0]);
+            this.mesh.remove(ennemy.mesh);
+            i--;
+        }
+
+        if(Math.abs(airplane.mesh.position.x-ennemy.mesh.position.x) > 10){
+            continue;
+        }
+        
         var diffPos = airplane.mesh.position.clone().sub(ennemy.mesh.position.clone());
         var d = diffPos.length();
-        if (d<game.ennemyDistanceTolerance){
+
+        // out
+        if (d > game.ennemyOutterDistanceTolerance + 5){
+            //particlesHolder.spawnParticles(ennemy.mesh.position.clone(), 25, Colors.red, 3);
+  
+            ennemiesPool.unshift(this.ennemiesInUse.splice(i,1)[0]);
+            this.mesh.remove(ennemy.mesh);
+            game.planeCollisionSpeedX = 100 * diffPos.x / d;
+            game.planeCollisionSpeedY = 100 * diffPos.y / d;
+            ambientLight.intensity = 2;
+  
+            game.distance -= 300;
+            i--;
+        }
+        // on
+        else if (d >= game.ennemyInnerDistanceTolerance - 5){
             particlesHolder.spawnParticles(ennemy.mesh.position.clone(), 25, Colors.red, 3);
   
             ennemiesPool.unshift(this.ennemiesInUse.splice(i,1)[0]);
@@ -65,10 +95,10 @@ EnnemiesHolder.prototype.rotateEnnemies = function(){
   
             removeEnergy();
             i--;
-        }else if (ennemy.angle > Math.PI){
-            ennemiesPool.unshift(this.ennemiesInUse.splice(i,1)[0]);
-            this.mesh.remove(ennemy.mesh);
-            i--;
+        }
+        // in
+        else if (d < game.ennemyInnerDistanceTolerance - 5){
+
         }
     }
 }

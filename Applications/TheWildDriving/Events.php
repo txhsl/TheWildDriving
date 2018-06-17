@@ -59,13 +59,16 @@ class Events
                         'posX'        => $message_data["posX"]+0,
                         'posY'        => $message_data["posY"]+0,
                         'posZ'        => $message_data["posZ"]+0,
-                        'rotX'        => $message_data["rotX"]+0,
-                        'rotY'        => $message_data["rotY"]+0,
-                        'rotZ'        => $message_data["rotZ"]+0,
+                        //'rotX'        => $message_data["rotX"]+0,
+                        //'rotY'        => $message_data["rotY"]+0,
+                        //'rotZ'        => $message_data["rotZ"]+0,
+                        'targetY'        => $message_data["targetY"]+0,
+                        'targetZ'        => $message_data["targetZ"]+0,
                         'distance'      => $message_data["distance"]+0,
-                        'life'     => 1,
-                        'name'     => isset($message_data['name']) ? $message_data['name'] : 'Guest.'.$_SESSION['id'],
-                        'authorized'  => false,
+                        'status'        => $message_data["status"],
+                        'planeFallSpeed'     => $message_data["planeFallSpeed"],
+                        'name'          => isset($message_data['name']) ? $message_data['name'] : 'Guest.'.$_SESSION['id'],
+                        'authorized'    => false,
                         )
                     ));
                 return;

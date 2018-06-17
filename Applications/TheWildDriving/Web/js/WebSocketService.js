@@ -26,7 +26,7 @@ var WebSocketService = function(model, webSocket) {
 		// new plane
 		if(!model.planes[data.id]) {
 			newup = true;
-			model.planes[data.id] = new AirPlane(data.id % 5);
+			model.planes[data.id] = new AirPlane(data.id % 4 + 1);
 			model.planes[data.id].mesh.scale.set(.25,.25,.25);
 			model.planes[data.id].mesh.position.y = game.planeDefaultHeight;
 			
@@ -37,20 +37,22 @@ var WebSocketService = function(model, webSocket) {
 		
 		// update name			
 		plane.name = data.name;
+		plane.status = data.status;
+		plane.planeFallSpeed = data.planeFallSpeed;
 
 		// update postion
 		if(plane != model.userPlane){
-			plane.mesh.position.x = data.posX;
-			plane.mesh.position.y = data.posY;
-			plane.mesh.position.z = data.posZ;
+			plane.targetY = data.targetY;
+			plane.targetZ = data.targetZ;
 
-			plane.mesh.position.x = data.posX;
-			plane.mesh.position.y = data.posY;
-			plane.mesh.position.z = data.posZ;
-		
-			plane.mesh.rotation.x = data.rotX;
-			plane.mesh.rotation.y = data.rotY;
-			plane.mesh.rotation.z = data.rotZ;
+			if((Math.abs(plane.mesh.position.x - data.posX) > 10 || Math.abs(plane.mesh.position.z - data.posZ) > 10) && plane.status == "playing"){
+				plane.mesh.position.x = data.posX;
+				plane.mesh.position.y = data.posY;
+				plane.mesh.position.z = data.posZ;
+			}
+			//plane.mesh.rotation.x = data.rotX;
+			//plane.mesh.rotation.y = data.rotY;
+			//plane.mesh.rotation.z = data.rotZ;
 		}
 		
 		plane.distance = data.distance;
@@ -65,7 +67,7 @@ var WebSocketService = function(model, webSocket) {
 			return;
 		}
 		plane.timeSinceLastServerUpdate = 0;
-		messages.push(new Message('@' + plane.name +' says: ' + data.message, data.id));
+		messages.push(new Message('@' + plane.name +' said: ' + data.message, data.id));
 	}
 	
 	// connect out 
@@ -101,15 +103,19 @@ var WebSocketService = function(model, webSocket) {
 	};
 	
 	// send self
-	this.sendUpdate = function(plane) {
+	this.sendUpdate = function(plane, targetY, targetZ) {
 		var sendObj = {
 			type: 'update',
 			posX: plane.mesh.position.x,
 			posY: plane.mesh.position.y,
 			posZ: plane.mesh.position.z,
-			rotX: plane.mesh.rotation.x,
-			rotY: plane.mesh.rotation.y,
-			rotZ: plane.mesh.rotation.z,
+			//rotX: plane.mesh.rotation.x,
+			//rotY: plane.mesh.rotation.y,
+			//rotZ: plane.mesh.rotation.z,
+			targetY: targetY,
+			targetZ: targetZ,
+			status: game.status,
+			planeFallSpeed: game.planeFallSpeed,
 			distance: game.distance,
 		};
 		
@@ -125,6 +131,7 @@ var WebSocketService = function(model, webSocket) {
 		var regexp = /name: ?(.+)/i;
 		if(regexp.test(msg)) {
 			model.userPlane.name = msg.match(regexp)[1];
+			nameValue.innerText = model.userPlane.name;
 			$.cookie('user_name', model.userPlane.name, {expires:14});
 			return;
 		}

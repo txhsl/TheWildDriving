@@ -11,16 +11,13 @@ Model.prototype.checkUserCollision = function (){
 			var d = diffPos.length();
         	if (d < game.usrDistanceTolerance){
 
-				if (!this.userPlane.protected){
-					game.planeCollisionSpeedX = 100 * diffPos.x / d;
-					game.planeCollisionSpeedY = 100 * diffPos.y / d;
-					ambientLight.intensity = 2;
+				game.planeCollisionSpeedX = 100 * diffPos.z / d;
+				game.planeCollisionSpeedY = 100 * diffPos.y / d;
+				ambientLight.intensity = 2;
 
-					this.userPlane.mesh.position.z += 0.5 * game.ennemyDistanceTolerance * diffPos.z / d;
-					this.userPlane.mesh.position.y += 0.5 * game.ennemyDistanceTolerance * diffPos.y / d;
-					removeEnergy();
-				}
-
+				//this.userPlane.mesh.position.z += 0.5 * game.ennemyDistanceTolerance * diffPos.z / d;
+				//this.userPlane.mesh.position.y += 0.5 * game.ennemyDistanceTolerance * diffPos.y / d;
+				removeEnergy();
 			}
 		}
 	}
