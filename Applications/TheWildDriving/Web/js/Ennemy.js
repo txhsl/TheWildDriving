@@ -1,5 +1,5 @@
 Ennemy = function(){
-    var geom = new THREE.RingGeometry(40,60,50,1);
+    var geom = new THREE.RingGeometry(50,60,50,1);
     var mat = new THREE.MeshPhongMaterial({
         color:Colors.red,
         shininess:0,

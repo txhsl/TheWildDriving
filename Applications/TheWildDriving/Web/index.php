@@ -6,9 +6,9 @@
  * For full copyright and license information, please see the MIT-LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @author walkor<walkor@workerman.net>
- * @copyright walkor<walkor@workerman.net>
- * @link http://www.workerman.net/
+ * @author teumessian<teumessian@qq.com>
+ * @copyright teumessian<teumessian@qq.com>
+ * @link http://www.teumessian.top/
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
  */
 if(!function_exists('is_mobile'))
@@ -63,6 +63,9 @@ if(!function_exists('is_mobile'))
 	</head>
 	<body>
 		<div class="game-holder" id="gameHolder">
+			
+			<div class="world" id="world" ></div>
+
 			<div class="header" id="header">
 				<h1><span>the</span>Wild Driving</h1>
 				<h2>enjoy the open sky</h2>
@@ -77,8 +80,8 @@ if(!function_exists('is_mobile'))
 						<div class="score__label">level</div>
 						<div class="score__value score__value--level" id="levelValue">1</div>
 						<svg class="level-circle" id="levelCircle" viewbox="0 0 200 200">
-							<circle id="levelCircleBgr" r="80" cx="100" cy="100" fill="none" stroke="#d1b790" stroke-width="24px" />
-							<circle id="levelCircleStroke" r="80" cx="100" cy="100" fill="none" #f25346 stroke="#68c3c0" stroke-width="14px" stroke-dasharray="502" />
+							<circle id="levelCircleBgr" r="80" cx="100" cy="100" fill="none" stroke="#b1bdfa" stroke-width="24px" />
+							<circle id="levelCircleStroke" r="80" cx="100" cy="100" fill="none" #f25346 stroke="#4876FF" stroke-width="14px" stroke-dasharray="502" />
 						</svg>
 					</div>
 					<div class="score__content" id="dist">
@@ -94,13 +97,19 @@ if(!function_exists('is_mobile'))
 				</div>
 
 			</div>
-			<div class="world" id="world" ></div>
+
 			<div class="message message--replay" id="replayMessage">Click to Replay</div>
 			<div class="message message--play" id="playMessage">Click to Play</div>
 			<div class="message message--instructions" id="instructions">The mouse controls<span>Keyboard to chat</span></div>
 		</div>
 		
 		<nav class="meta" id="meta" style="display: none;">
+			<a><strong>History Score Rank</strong></a>
+			<table class="meta__list" id="historyScoreList">
+			</table>
+			
+			<a></a>
+
 			<a><strong>Score Rank</strong></a>
 			<table class="meta__list" id="scoreList">
 			</table>
@@ -114,8 +123,8 @@ if(!function_exists('is_mobile'))
 
 		<div class="partisan" id="partisan">
 			<svg class="partisan__bg" viewBox="0 0 500 188" preserveAspectRatio="none" width="100%" height="100%" aria-hidden="true">
-				<polygon points="0 154 123.39 0 235.78 14.79 365.6 28.9 436.24 114.93 500 188 0 188 0 154" fill="#bed730"/>
-				<polygon points="0 188 108.84 18.17 347.91 26.79 500 188 365.6 28.9 123.39 0 0 154 0 188" fill="#dde465"/>
+				<polygon points="0 154 123.39 0 235.78 14.79 365.6 28.9 436.24 114.93 500 188 0 188 0 154" fill="#f7d9aa"/>
+				<polygon points="0 188 108.84 18.17 347.91 26.79 500 188 365.6 28.9 123.39 0 0 154 0 188" fill="#e4e0ba"/>
 			</svg>
 			<h3 class="partisan__title">Teumessian</h3>
 		</div>

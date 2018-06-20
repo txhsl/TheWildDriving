@@ -45,3 +45,31 @@ Model.prototype.updateScore = function (){
 		tdScore.appendChild(spanScore);
 	}
 }
+
+Model.prototype.updateHistoryScore = function (data){
+	
+	historyScoreList.innerHTML = "<tr><th><span>Player</span></th><th><span>Distance</span></th></tr>";
+	for (var pos in data.score){
+		var plane = data.score[pos];
+		var tr = document.createElement("tr"); 
+		var tdPlayer = document.createElement("td"); 
+		var tdScore = document.createElement("td"); 
+		var spanPlayer = document.createElement("span"); 
+		var spanScore = document.createElement("span");
+		spanPlayer.innerHTML = plane.name;
+		spanScore.innerHTML = parseInt(plane["max(distance)"]);
+
+		historyScoreList.appendChild(tr);
+		tr.appendChild(tdPlayer);
+		tr.appendChild(tdScore);
+		tdPlayer.appendChild(spanPlayer);
+		tdScore.appendChild(spanScore);
+	}
+}
+
+Model.prototype.saveScore = function (){
+	var name = model.userPlane.name;
+	var distance = model.userPlane.distance;
+
+	webSocketService.sendSaveRequest(name, distance);
+}

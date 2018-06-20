@@ -18,6 +18,13 @@ var WebSocketService = function(model, webSocket) {
 		if($.cookie('user_name'))	{
 			webSocketService.sendMessage('name:'+$.cookie('user_name'));
 		}
+
+		webSocketService.sendGetRequest();
+	};
+
+	this.scoreHandler = function(data) {
+		console.log(data);
+		model.updateHistoryScore(data);
 	};
 	
 	// update all
@@ -68,7 +75,7 @@ var WebSocketService = function(model, webSocket) {
 		}
 		plane.timeSinceLastServerUpdate = 0;
 		messages.push(new Message('@' + plane.name +' said: ' + data.message, data.id));
-	}
+	};
 	
 	// connect out 
 	this.closedHandler = function(data) {
@@ -76,7 +83,7 @@ var WebSocketService = function(model, webSocket) {
 			scene.remove(model.planes[data.id].mesh);
 			delete model.planes[data.id];
 		}
-	}
+	};
 	
 	// redirect server
 	this.redirectHandler = function(data) {
@@ -87,14 +94,14 @@ var WebSocketService = function(model, webSocket) {
 				document.location = data.url;
 			}			
 		}
-	}
+	};
 	
 	this.processMessage = function(data) {
 		var fn = webSocketService[data.type + 'Handler'];
 		if (fn) {
 			fn(data);
 		}
-	}
+	};
 	
 	// disconnect message
 	this.connectionClosed = function() {
@@ -124,7 +131,7 @@ var WebSocketService = function(model, webSocket) {
 		}
 		
 		webSocket.send(JSON.stringify(sendObj));
-	}
+	};
 	
 	// send message
 	this.sendMessage = function(msg) {
@@ -142,7 +149,27 @@ var WebSocketService = function(model, webSocket) {
 		};
 		
 		webSocket.send(JSON.stringify(sendObj));
-	}
+	};
+
+	// request the history score rank
+	this.sendGetRequest = function() {
+		var sendObj = {
+			type: 'get'
+		};
+
+		webSocket.send(JSON.stringify(sendObj));
+	};
+
+	// update the history score rank
+	this.sendSaveRequest = function(name, distance) {
+		var sendObj = {
+			type: 'save',
+			name: name,
+			distance: distance
+		}
+
+		webSocket.send(JSON.stringify(sendObj));
+	};
 	
 	// token
 	this.authorize = function(token,verifier) {
@@ -153,5 +180,5 @@ var WebSocketService = function(model, webSocket) {
 		};
 		
 		webSocket.send(JSON.stringify(sendObj));
-	}
+	};
 }

@@ -17,6 +17,8 @@
  * 主要是处理 onMessage onClose 三个方法
  */
 
+require_once 'Connection.php';
+
 use \GatewayWorker\Lib\Gateway;
 
 class Events
@@ -49,6 +51,33 @@ class Events
         {
             case 'login':
                 break;
+            //获取排行榜
+            case 'get':
+                $db = new Workerman\MySQL\Connection('127.0.0.1', '3306', 'root', 'admin','webgame');
+                $top_score = $db->query("select name, max(distance) from score group by name order by distance desc limit 5;");
+
+                $new_message = array(
+                    'type'=>'score', 
+                    'id'  =>$_SESSION['id'],
+                    'score'=>$top_score,
+                );
+
+                return Gateway::sendToClient($client_id, json_encode($new_message));
+            //新增分数并转播
+            case 'save':
+                $db = new Workerman\MySQL\Connection('127.0.0.1', '3306', 'root', 'admin','webgame');
+                $insert_id = $db->insert('score')->cols(array(
+                    'name'=>$message_data["name"],
+                    'distance'=>$message_data["distance"]+0))->query();
+                $top_score = $db->query("select name, max(distance) from score group by name order by distance desc limit 5;");
+
+                $new_message = array(
+                    'type'=>'score', 
+                    'id'  =>$_SESSION['id'],
+                    'score'=>$top_score,
+                );
+
+                return Gateway::sendToAll(json_encode($new_message));
             // 更新用户
             case 'update':
                 // 转播给所有用户

@@ -6,7 +6,7 @@ var Colors = {
     brownDark:0x23190f,
     pink:0xF5986E,
     yellow:0xf4ce93,
-    blue:0x68c3c0,
+    blue:0x4876FF,
     green:0x76ff03,
     purple:0x7c4dff,
     grey:0x212121,
@@ -42,7 +42,7 @@ function resetGame(){
             distance:0,
             ratioSpeedDistance:50,
             energy:100,
-            ratioSpeedEnergy:3,
+            ratioSpeedEnergy:4,
   
             level:1,
             levelLastUpdate:0,
@@ -82,7 +82,7 @@ function resetGame(){
             coinLastSpawn:0,
             distanceForCoinsSpawn:100,
   
-            ennemyInnerDistanceTolerance: 40,
+            ennemyInnerDistanceTolerance: 50,
             ennemyOutterDistanceTolerance: 60,
             ennemyValue:10,
             ennemiesSpeed:.6,
@@ -127,7 +127,7 @@ function createScene() {
       nearPlane,
       farPlane
       );
-    scene.fog = new THREE.Fog(0xf7d9aa, 100,2000);
+    scene.fog = new THREE.Fog(0xe7ecfa, 100,2000);
  
     camera.position.x = -400;
     camera.position.z = 0;
@@ -236,7 +236,7 @@ function createLights() {
 
   hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .9)
 
-  ambientLight = new THREE.AmbientLight(0xdc8874, .5);
+  ambientLight = new THREE.AmbientLight(0xB0C4DE, .5);
 
   shadowLight = new THREE.DirectionalLight(0xffffff, .9);
   shadowLight.position.set(150, 350, 350);
@@ -500,7 +500,7 @@ function updateEnergy(){
   game.energy -= game.speed*deltaTime*game.ratioSpeedEnergy;
   game.energy = Math.max(0, game.energy);
   energyBar.style.right = (100-game.energy)+"%";
-  energyBar.style.backgroundColor = (game.energy<50)? "#f25346" : "#68c3c0";
+  energyBar.style.backgroundColor = (game.energy<50)? "#f25346" : "#3CB371";
 
   if (game.energy<30){
     energyBar.style.animationName = "blinking";
@@ -510,6 +510,10 @@ function updateEnergy(){
 
   if (game.energy <1){
     game.status = "gameover";
+    var name = model.userPlane.name;
+	  var distance = model.userPlane.distance;
+
+	  webSocketService.sendSaveRequest(name, distance);
   }
 }
 
@@ -655,6 +659,7 @@ function init(event){
   partisan = document.getElementById("partisan");
   meta = document.getElementById("meta");
   scoreList = document.getElementById("scoreList");
+  historyScoreList = document.getElementById("historyScoreList");
   messageBox = document.getElementById("messageBox");
   nameValue = document.getElementById("nameValue");
 
