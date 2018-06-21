@@ -1,0 +1,7 @@
+CREATE DATABASE `webgame` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE TABLE `webgame`.`score` (
+  `scoreNo` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  `distance` int(11) DEFAULT NULL,
+  PRIMARY KEY (`scoreNo`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;

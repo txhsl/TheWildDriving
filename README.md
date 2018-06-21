@@ -1,5 +1,50 @@
 # TheWildDriving
-A game based on Three.js, developed from TheAviator--http://tympanus.net/Tutorials/TheAviator/
+一个基于Three.js和Workerman的Web游戏，素材来源于TheAviator--http://tympanus.net/Tutorials/TheAviator/
 
-# Notice 
-It's the course design for Web, and I reserve the right to investigate the plagiarism.
+# 介绍
+在TheWildDriving中，你可以享受驾驶特技飞机与他人联机的独特体验。尽力穿过每一个红色标记圈，捕捉空中能源补给，减少和其他玩家的碰撞，来获得最高的分数！
+
+# 功能
+
+## 游戏游玩
+通过鼠标可以控制飞机上下左右移动，有一定的游玩范围限制。游戏目标是获取尽可能高的分数，登上历史排行榜，和其他玩家一较高下。
+游戏中红色圆圈为标记圈。玩家从中完美穿过才能不受惩罚，无视标记会收到扣分惩罚，意外撞击标记圈不仅会扣分还会损失能量。
+绿色晶体为能量补给。随着游戏时间增加，飞机能量会不断消耗，缺少能量会导致飞机坠落，游戏结束。
+
+## 多人游玩
+游戏支持多人联机。当多个玩家同时访问同一个URL时，他们的游戏将一同进行。
+游戏中玩家之间应当减少碰撞来保留自己的能量。
+
+## 分数累计
+游戏房间中玩家可以看到自己和其他玩家当前的实时分数，当游戏正常结束时，玩家的分数将连同他的名字一起永久的存入数据库，甚至出现在排行榜上。
+
+## 聊天系统
+游戏之余玩家可以向服务器公屏发送消息，所有真正游玩的玩家都可以看到，并且消息将以玩家的飞机颜色作为标记以作区分。请使用键盘任意按键呼出消息面板编辑并回车发送。消息超时后将被擦除，不会被存储。
+
+## 修改名字
+一名新玩家加入游戏时将被系统使用默认方法命名，但这些名字不能代表玩家的个性。需要修改名字时请在聊天系统内键入“name:xxx”格式的指令并发送。这些名字所有玩家都可见并将作为分数记录的主体。注意它们会影响UI的显示并会加入浏览器Cookie中。
+
+## 修改头像
+这是一个用处不大的功能，使用“img:xxx”的指令输入图片的URL就可以做到，但是这只能自己可见，且不影响实际功能。
+
+# 环境需求
+PHP>=5.3.3，兼容Threejs-r73左右版本并且支持WebGL的浏览器（比如Google Chrome 62.0），MySQL数据库
+
+# 部署方法
+1. 完善库依赖，确保PHP在你的环境变量中，Linux平台使用 php -m 检查是否包含pcntl、posix，没有最好安装这些扩展（非必须）
+2. Clone本Repository到你的本地
+3. 启动MySQL并使用schema.sql中的语句新建数据库
+4. 修改\Applications\TheWildDriving\Events.php中的2个数据库连接字符串中的用户名和密码
+5. Windows平台启动start_for_win.bat、Linux和Mac OS则在根目录下启动cmd，键入php start.php start启动
+6. 访问浏览器localhost:8383
+7. 点击页面启动游戏
+
+# 在线DEMO
+
+在 http://112.74.207.160:8383/ 有一个现成的DEMO可以访问
+
+# 参照
+启动或运行过程中遇到问题可参照以下网站
+1. http://doc.workerman.net/
+2. https://threejs.org/
+3. https://www.mysql.com/

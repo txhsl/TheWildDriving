@@ -46,7 +46,7 @@ class Events
         {
             return ;
         }
-        
+
         switch($message_data['type'])
         {
             case 'login':
