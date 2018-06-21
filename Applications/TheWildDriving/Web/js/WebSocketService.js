@@ -142,7 +142,7 @@ var WebSocketService = function(model, webSocket) {
 			$.cookie('user_name', model.userPlane.name, {expires:14});
 			return;
 		}
-		
+
 		var sendObj = {
 			type: 'message',
 			message: msg
